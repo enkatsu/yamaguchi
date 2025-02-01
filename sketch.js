@@ -213,7 +213,19 @@ function draw() {
   // デバッグ情報の更新と描画
   debugInfo.update(detections?.multiHandLandmarks || [], fing);
   debugInfo.draw();
+
+  // if (prevTime !== null && Math.floor(prevTime / 3000) < Math.floor(millis() / 3000)) {
+  //   if (fing === 2) {
+  //     window.location.href = './hands-window';
+  //     return;
+  //   }
+  //   fing = (fing + 1) % 3;
+  //   resetScene();
+  // }
+  // prevTime = millis();
 }
+
+// let prevTime = null;
 
 /**
  * モード切り替え時に描画内容や履歴をリセット
@@ -550,14 +562,14 @@ function updateBallsMP(landmarks, handIndex) {
 }
 
 /** モード切り替え用関数 */
-function mouseClicked() {
-  if (fing === 2) {
-    window.location.href = './hands-window';
-    return;
-  }
-  fing = (fing + 1) % 3;
-  resetScene();
-}
+// function mouseClicked() {
+//   if (fing === 2) {
+//     window.location.href = './hands-window';
+//     return;
+//   }
+//   fing = (fing + 1) % 3;
+//   resetScene();
+// }
 
 function touchEnded() {
   if (fing === 2) {

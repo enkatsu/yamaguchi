@@ -166,9 +166,9 @@ window.keyPressed = () => {
   }
 };
 
-window.mouseClicked = () => {
-  window.location.href = './..';
-};
+// window.mouseClicked = () => {
+//   window.location.href = './..';
+// };
 
 window.touchEnded = () => {
   window.location.href = './..';
