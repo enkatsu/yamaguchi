@@ -1,774 +1,261 @@
-// let balls = [];
-// let fing = 0; //機能の数
-// let handpose;
-// let video;
-// let flippedVideo;
-// let predictions = [];
-// let ftip = new Array(5);
-// let canvas2;
-
-// const options = {
-
-//   flipHorizontal: true,
-  
-//   maxContinuousChecks: Infinity,
-
-//   detectionConfidence: 0.6,
-  
-//   scoreThreshold: 0.75,
-  
-//   iouThreshold: 0.3,
-
-// }
-
-
-// function setup() {
-
-//   createCanvas(640, 480);
-
-//   canvas2 = createGraphics(width, height);
-
-//   canvas2.strokeWeight(5);
-
-//   video = createCapture(VIDEO);
-
-//   video.size(width, height);
-
-//   for (let i = 0; i < 5; i++) {
-
-//     ftip[i] = new Array(2);
-
-//   }
-
-//   flippedVideo = ml5.flipImage(video);
-
-//   handpose = ml5.handpose(video, options, modelReady);
-
-//   handpose.on("predict", results => {
-//     predictions = results;
-//   });
-
-//   video.hide();
-
-// }
-
-
-// function modelReady() {
-
-//   console.log("Model ready!");
-
-// }
-
-
-// function draw() {
-
-//   flippedVideo = ml5.flipImage(video);
-
-//   image(flippedVideo, 0, 0, width, height);
-
-//   image(canvas2, 0, 0);
-
-//   drawKeypoints(fing);
-//   if (fing == 2) {
-//     canvas2.clear();
-//     for (let i = 0; i < balls.length; i++) {
-//       let ball = balls[i];
-//       noStroke();
-//       fill(234, 90, 255, 90);
-//       ellipse(ball.x, ball.y, 10, 10);
-//       ball.xSpeed = ball.x - ball.prevx;
-//       ball.ySpeed = ball.y - ball.prevy;
-//       ball.ySpeed *= 1.98;
-//       ball.x += ball.xSpeed * 0.1;
-//       ball.y += ball.ySpeed * 0.1;
-//     }
-//   }
-// }
-
-// function mousePressed() {
-//   if (fing != 2) {
-//     fing++;
-//   }
-//   else fing = 0;
-// }
-
-// function drawKeypoints(func) {
-
-//   for (let i = 0; i < predictions.length; i += 1) {
-
-//     const prediction = predictions[i];
-
-//     let pKeypoint;
-
-//     for (let j = 0; j < prediction.landmarks.length; j += 1) {
-
-//       const keypoint = prediction.landmarks[j];
-
-//       if (func == 0) {
-//         if (j > 0 && (j != 5 && j != 9 && j != 13 && j != 17)) {
-
-//           stroke(255, 255, 0);
-
-//           line(pKeypoint[0], pKeypoint[1], keypoint[0], keypoint[1]);
-//         }
-
-//         if (j == 6 || j == 10 || j == 14 || j == 18) {
-//           stroke(255, 255, 0);
-
-//           line(pKeypoint[0], pKeypoint[1], prediction.landmarks[0][0], prediction.landmarks[0][1]);
-//         }
-
-//         if (j == 2 || j == 3 || j == 4 || j == 5) {
-//           for (let m = j - 1; m < j + 12; m += 4) {
-//             stroke(255, 255, 0);
-
-//             line(prediction.landmarks[m][0], prediction.landmarks[m][1], prediction.landmarks[m + 4][0], prediction.landmarks[m + 4][1]);
-//           }
-//         }
-//       }
-//       if (func == 1) {
-//         if (j == 8) {
-//           canvas2.ellipse(keypoint[0], keypoint[1], 5, 5);
-//         }
-//       }
-//       pKeypoint = keypoint;
-//     }
-
-//     let count = 0;
-
-//     for (let i = 4; i <= 20; i += 4) {
-
-//       if (func == 2) {
-//         balls.push({
-//           x: prediction.landmarks[i][0],
-//           y: prediction.landmarks[i][1],
-//           xSpeed: 0,
-//           ySpeed: 0,
-//           prevx: ftip[count][0],
-//           prevy: ftip[count][1],
-//         });
-//       }
-
-//       ftip[count][0] = prediction.landmarks[i][0];
-
-//       ftip[count][1] = prediction.landmarks[i][1];
-
-//       count++;
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let balls = [];
-// let fing = 0; // 機能の数
-// let handpose;
-// let video;
-// let predictions = [];
-// let ftip = new Array(5);
-// let canvas2;
-
-// const options = {
-//   flipHorizontal: true,
-//   maxContinuousChecks: Infinity,
-//   detectionConfidence: 0.6,
-//   scoreThreshold: 0.75,
-//   iouThreshold: 0.3,
-// };
-
-// function setup() {
-//   createCanvas(640, 480);
-//   canvas2 = createGraphics(width, height);
-//   canvas2.strokeWeight(5);
-
-//   video = createCapture(VIDEO);
-//   video.size(width, height);
-
-//   for (let i = 0; i < 5; i++) {
-//     ftip[i] = new Array(2);
-//   }
-
-//   // handposeモデルの読み込み
-//   handpose = ml5.handpose(video, options, modelReady);
-
-//   // 手のポーズが検出されるたびに予測を保存
-//   handpose.on("predict", (results) => {
-//     predictions = results;
-//   });
-
-//   video.hide();
-// }
-
-// function modelReady() {
-//   console.log("Model ready!");
-// }
-
-// function draw() {
-//   // ミラーリング処理
-//   translate(width, 0);
-//   scale(-1, 1);
-//   image(video, 0, 0, width, height);
-//   resetMatrix(); // 描画座標系を元に戻す
-
-//   // キャンバスに描画
-//   image(canvas2, 0, 0);
-
-//   drawKeypoints(fing);
-
-//   if (fing == 2) {
-//     canvas2.clear();
-//     for (let i = 0; i < balls.length; i++) {
-//       let ball = balls[i];
-//       noStroke();
-//       fill(234, 90, 255, 90);
-//       ellipse(ball.x, ball.y, 10, 10);
-//       ball.xSpeed = ball.x - ball.prevx;
-//       ball.ySpeed = ball.y - ball.prevy;
-//       ball.ySpeed *= 1.98;
-//       ball.x += ball.xSpeed * 0.1;
-//       ball.y += ball.ySpeed * 0.1;
-//     }
-//   }
-// }
-
-// // クリックで機能切り替え
-// function mousePressed() {
-//   if (fing != 2) {
-//     fing++;
-//   } else {
-//     fing = 0;
-//   }
-// }
-
-// // 手のキーポイント描画
-// function drawKeypoints(func) {
-//   for (let i = 0; i < predictions.length; i += 1) {
-//     const prediction = predictions[i];
-//     let pKeypoint;
-
-//     for (let j = 0; j < prediction.landmarks.length; j += 1) {
-//       const keypoint = prediction.landmarks[j];
-
-//       if (func == 0) {
-//         // 指の線を描画
-//         if (j > 0 && j != 5 && j != 9 && j != 13 && j != 17) {
-//           stroke(255, 255, 0);
-//           line(pKeypoint[0], pKeypoint[1], keypoint[0], keypoint[1]);
-//         }
-
-//         if (j == 6 || j == 10 || j == 14 || j == 18) {
-//           stroke(255, 255, 0);
-//           line(pKeypoint[0], pKeypoint[1], prediction.landmarks[0][0], prediction.landmarks[0][1]);
-//         }
-
-//         if (j == 2 || j == 3 || j == 4 || j == 5) {
-//           for (let m = j - 1; m < j + 12; m += 4) {
-//             stroke(255, 255, 0);
-//             line(
-//               prediction.landmarks[m][0],
-//               prediction.landmarks[m][1],
-//               prediction.landmarks[m + 4][0],
-//               prediction.landmarks[m + 4][1]
-//             );
-//           }
-//         }
-//       }
-
-//       if (func == 1 && j == 8) {
-//         // 人差し指の先端にポイント
-//         canvas2.ellipse(keypoint[0], keypoint[1], 5, 5);
-//       }
-//       pKeypoint = keypoint;
-//     }
-
-//     // 指の動きを追跡
-//     let count = 0;
-//     for (let i = 4; i <= 20; i += 4) {
-//       if (func == 2) {
-//         balls.push({
-//           x: prediction.landmarks[i][0],
-//           y: prediction.landmarks[i][1],
-//           xSpeed: 0,
-//           ySpeed: 0,
-//           prevx: ftip[count][0],
-//           prevy: ftip[count][1],
-//         });
-//       }
-//       ftip[count][0] = prediction.landmarks[i][0];
-//       ftip[count][1] = prediction.landmarks[i][1];
-//       count++;
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-// let balls = [];
-// let fing = 0;
-// let video;
-// let handposeModel;
-// let predictions = [];
-// let ftip = new Array(5);
-// let canvas2;
-
-// async function setup() {
-//   createCanvas(640, 480);
-//   canvas2 = createGraphics(width, height);
-//   canvas2.strokeWeight(5);
-
-//   video = createCapture(VIDEO);
-//   video.size(width, height);
-
-//   for (let i = 0; i < 5; i++) {
-//     ftip[i] = new Array(2);
-//   }
-
-//   video.hide();
-
-//   // TensorFlow.jsのhandposeモデルをロード
-//   handposeModel = await handpose.load();
-//   console.log("Handpose model loaded!");
-
-//   detectHands();
-// }
-
-// // 手の検出を行う
-// async function detectHands() {
-//   const predictionsResult = await handposeModel.estimateHands(video.elt);
-//   predictions = predictionsResult;
-//   detectHands();  // 再帰的に検出を繰り返す
-// }
-
-// function draw() {
-//   translate(width, 0);
-//   scale(-1, 1);
-//   image(video, 0, 0, width, height);
-//   resetMatrix();
-
-//   image(canvas2, 0, 0);
-
-//   drawKeypoints(fing);
-
-//   if (fing == 2) {
-//     canvas2.clear();
-//     for (let i = 0; i < balls.length; i++) {
-//       let ball = balls[i];
-//       noStroke();
-//       fill(234, 90, 255, 90);
-//       ellipse(ball.x, ball.y, 10, 10);
-//       ball.xSpeed = ball.x - ball.prevx;
-//       ball.ySpeed = ball.y - ball.prevy;
-//       ball.ySpeed *= 1.98;
-//       ball.x += ball.xSpeed * 0.1;
-//       ball.y += ball.ySpeed * 0.1;
-//     }
-//   }
-// }
-
-// // クリックで機能切り替え
-// function mousePressed() {
-//   if (fing != 2) {
-//     fing++;
-//   } else {
-//     fing = 0;
-//   }
-// }
-
-// // 手のキーポイントを描画
-// function drawKeypoints(func) {
-//   for (let i = 0; i < predictions.length; i++) {
-//     const prediction = predictions[i];
-//     let pKeypoint;
-
-//     for (let j = 0; j < prediction.landmarks.length; j++) {
-//       const keypoint = prediction.landmarks[j];
-
-//       if (func == 0) {
-//         // 指の線を描画
-//         if (j > 0 && j != 5 && j != 9 && j != 13 && j != 17) {
-//           stroke(255, 255, 0);
-//           line(pKeypoint[0], pKeypoint[1], keypoint[0], keypoint[1]);
-//         }
-
-//         if (j == 6 || j == 10 || j == 14 || j == 18) {
-//           stroke(255, 255, 0);
-//           line(pKeypoint[0], pKeypoint[1], prediction.landmarks[0][0], prediction.landmarks[0][1]);
-//         }
-
-//         if (j == 2 || j == 3 || j == 4 || j == 5) {
-//           for (let m = j - 1; m < j + 12; m += 4) {
-//             stroke(255, 255, 0);
-//             line(
-//               prediction.landmarks[m][0],
-//               prediction.landmarks[m][1],
-//               prediction.landmarks[m + 4][0],
-//               prediction.landmarks[m + 4][1]
-//             );
-//           }
-//         }
-//       }
-
-//       if (func == 1 && j == 8) {
-//         // 人差し指の先端にポイント
-//         canvas2.ellipse(keypoint[0], keypoint[1], 5, 5);
-//       }
-//       pKeypoint = keypoint;
-//     }
-
-//     let count = 0;
-//     for (let i = 4; i <= 20; i += 4) {
-//       if (func == 2) {
-//         balls.push({
-//           x: prediction.landmarks[i][0],
-//           y: prediction.landmarks[i][1],
-//           xSpeed: 0,
-//           ySpeed: 0,
-//           prevx: ftip[count][0],
-//           prevy: ftip[count][1],
-//         });
-//       }
-//       ftip[count][0] = prediction.landmarks[i][0];
-//       ftip[count][1] = prediction.landmarks[i][1];
-//       count++;
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-// let balls = [];
-// let fing = 0;
-// let video;
-// let handposeModel;
-// let predictions = [];
-// let ftip = Array.from({ length: 5 }, () => Array(2)); // 指先の座標を記録する配列
-// let canvas2;
-// let trail = [];
-// const trailLength = 20;  // 軌跡の最大長さ
-
-// // handposeモデルのオプション設定
-// const options = {
-//   flipHorizontal: true,
-//   maxContinuousChecks: 5,  // 無限チェックを制限して負荷軽減
-//   detectionConfidence: 0.7,  // 精度を上げて誤検出を減らす
-//   scoreThreshold: 0.75,
-//   iouThreshold: 0.3,
-// };
-
-// // 初期セットアップ関数
-// async function setup() {
-//   createCanvas(640, 480); // メインキャンバスの作成
-//   canvas2 = createGraphics(width, height); // 手描き用のサブキャンバス
-//   canvas2.strokeWeight(5);
-
-//   video = createCapture(VIDEO); // カメラ映像の取得
-//   video.size(width, height);
-//   video.hide(); // 映像を隠す（描画は自前で行う）
-
-//   // TensorFlow.jsが準備完了するまで待機
-//   await tf.ready();
-//   console.log("TensorFlow.js is ready!");
-
-//   // handposeモデルをロード
-//   handposeModel = await handpose.load(options);
-//   console.log("Handpose model loaded!");
-
-//   frameRate(30);  // フレームレートを調整して負荷を軽減
-// }
-
-// // 毎フレーム呼び出される描画関数
-// async function draw() {
-//   translate(width, 0);
-//   scale(-1, 1); // カメラ映像を左右反転
-//   image(video, 0, 0, width, height);
-//   resetMatrix(); // 座標系をリセット
-
-//   image(canvas2, 0, 0); // 手描きキャンバスを重ねる
-
-//   // 手の検出処理を行う（非同期処理の負荷軽減）
-//   if (handposeModel && frameCount % 2 === 0) {
-//     predictions = await handposeModel.estimateHands(video.elt);
-//   }
-
-//   drawKeypoints(fing);
-
-//   // ボールの動きの描画処理
-//   if (fing === 2) {
-//     canvas2.clear();
-//     balls.forEach((ball) => {
-//       noStroke();
-//       let colorHue = map(ball.y, 0, height, 0, 360); // Y座標で色を変更
-//       fill(colorHue, 90, 255, 90);
-//       ellipse(ball.x, ball.y, 10, 10);
-//       ball.xSpeed = lerp(ball.xSpeed || 0, ball.x - ball.prevx, 0.2);
-//       ball.ySpeed = lerp(ball.ySpeed || 0, ball.y - ball.prevy, 0.2);
-//       ball.ySpeed *= 0.9;  // 減衰を追加
-//       ball.x += ball.xSpeed * 0.05;  // 動きのスムーズ化
-//       ball.y += ball.ySpeed * 0.05;
-//     });
-//     balls = balls.slice(-100);  // ボールの配列長を制限してメモリ消費を抑制
-//   }
-// }
-
-// // マウスクリックで機能切り替え
-// function mousePressed() {
-//   fing = (fing + 1) % 3;
-// }
-
-// // キーポイントの描画処理
-// function drawKeypoints(func) {
-//   predictions.forEach((prediction) => {
-//     let pKeypoint;
-
-//     // 軌跡の描画処理
-//     if (func === 1) {
-//       canvas2.noFill();
-//       canvas2.stroke(0, 255, 0); // 緑色の線
-//       canvas2.strokeWeight(2);
-//     }
-
-//     prediction.landmarks.forEach((keypoint, j) => {
-//       let mirroredX = width - keypoint[0]; // X座標を反転
-//       let mirroredY = keypoint[1];
-
-//       // 人差し指の軌跡描画処理
-//       if (func === 1 && j === 8) {
-//         trail.push([mirroredX, mirroredY]);
-//         if (trail.length > trailLength) trail.shift(); // 軌跡の長さを制限
-
-//         canvas2.beginShape();
-//         trail.forEach(([x, y]) => canvas2.curveVertex(x, y)); // 曲線で軌跡を描画
-//         canvas2.endShape();
-
-//         let colorHue = map(mirroredY, 0, height, 0, 360);
-//         canvas2.fill(colorHue, 90, 255); // 軌跡の色を指の高さで変化
-//         canvas2.ellipse(mirroredX, mirroredY, 8, 8); // 人差し指先端に円を描画
-//       }
-
-//       // 指の関節を結ぶ線の描画
-//       if (func === 0) {
-//         drawConnections(j, pKeypoint, mirroredX, mirroredY, prediction);
-//       }
-
-//       pKeypoint = [mirroredX, mirroredY];
-//     });
-
-//     // ボールの更新処理
-//     updateBalls(prediction, func);
-//   });
-// }
-
-// // 関節を線で結ぶ処理
-// function drawConnections(j, pKeypoint, mirroredX, mirroredY, prediction) {
-//   if (pKeypoint && j > 0 && ![5, 9, 13, 17].includes(j)) {
-//     stroke(255, 255, 0); // 黄色の線
-//     line(pKeypoint[0], pKeypoint[1], mirroredX, mirroredY);
-//   }
-//   if ([6, 10, 14, 18].includes(j)) {
-//     stroke(255, 255, 0);
-//     line(pKeypoint[0], pKeypoint[1], width - prediction.landmarks[0][0], prediction.landmarks[0][1]);
-//   }
-//   if ([2, 3, 4, 5].includes(j)) {
-//     for (let m = j - 1; m < j + 12; m += 4) {
-//       stroke(255, 255, 0);
-//       line(
-//         width - prediction.landmarks[m][0],
-//         prediction.landmarks[m][1],
-//         width - prediction.landmarks[m + 4][0],
-//         prediction.landmarks[m + 4][1]
-//       );
-//     }
-//   }
-// }
-
-// // ボールの座標を更新する処理
-// function updateBalls(prediction, func) {
-//   if (func !== 2) return;
-
-//   prediction.landmarks.filter((_, index) => index >= 4 && (index - 4) % 4 === 0).forEach((keypoint, count) => {
-//     let mirroredX = width - keypoint[0];
-//     let mirroredY = keypoint[1];
-
-//     balls.push({
-//       x: mirroredX,
-//       y: mirroredY,
-//       xSpeed: 0,
-//       ySpeed: 0,
-//       prevx: ftip[count][0],
-//       prevy: ftip[count][1],
-//     });
-
-//     [ftip[count][0], ftip[count][1]] = [mirroredX, mirroredY];
-//   });
-// }
-
-
-
-
-
 /***************************************************
- * 修正版サンプルコード
- * p5.js + @tensorflow-models/handpose を利用
+ * p5.js + MediaPipe Hands デモ
  ***************************************************/
 
-/** 
- * 指先ランドマークのインデックス（handposeでの標準インデックス）
- * 参考: https://github.com/tensorflow/tfjs-models/tree/master/handpose
- */
-const THUMB_TIP = 4;
-const INDEX_FINGER_TIP = 8;
-const MIDDLE_FINGER_TIP = 12;
-const RING_FINGER_TIP = 16;
-const PINKY_TIP = 20;
+/** キャンバスサイズ定数 */
+const CANVAS_WIDTH = 640;
+const CANVAS_HEIGHT = 480;
 
-// 軌跡描画用
-const TRAIL_LENGTH = 20; 
-let trail = [];          
-
-// 指先の座標を前フレームで記録する配列（ボール用）
-let ftip = Array.from({ length: 5 }, () => Array(2).fill(0));
-
-// ボール描画用配列とモード切り替え変数
-let balls = [];
-let fing = 0;
-
-// handpose関連
-let video;
-let handposeModel;
-let predictions = [];
-
-// p5.jsのサブキャンバス（軌跡やお絵かきを別レイヤーで管理）
-let canvas2;
-
-// handposeモデルのオプション設定
-const options = {
-  flipHorizontal: true,
-  maxContinuousChecks: 5,
-  detectionConfidence: 0.7,
-  scoreThreshold: 0.75,
-  iouThreshold: 0.3,
+/** モード切り替え用定数 */
+const MODES = {
+  SKELETON: 0,
+  INDEX_TRAIL: 1,
+  BALL: 2
 };
 
+/** グローバル変数 */
+let detections = {};  // MediaPipe検出結果
+let videoElement;     // ビデオ要素
+let canvas2;          // サブキャンバス
+let debugInfo;        // デバッグ情報
+let fing = MODES.SKELETON;  // 現在のモード
 
-const windowSize = () => [
-  window.innerWidth,
-  window.innerHeight,
+// 人差し指の軌跡（モード1用）
+let trail = [[], []];
+const TRAIL_LENGTH = 20;
+
+// 指先の前フレーム座標（モード2用）
+let ftip = [
+  Array.from({ length: 5 }, () => [0, 0]),  // 左手の指先座標
+  Array.from({ length: 5 }, () => [0, 0])   // 右手の指先座標
 ];
+// ボール格納配列（モード2用）
+let balls = [];
 
-//------------------------------
-// p5.jsのセットアップ関数
-//------------------------------
+/** アプリケーション設定 */
+const CONFIG = {
+  display: {
+    debug: true,
+    colors: {
+      leftHand: [255, 255, 0],
+      rightHand: [0, 255, 255]
+    }
+  },
+  effects: {
+    ball: {
+      gravity: 0.3,
+      friction: 0.98,
+      elasticity: 0.8
+    },
+    trail: {
+      maxLength: 20,
+      minThickness: 2,
+      maxThickness: 8
+    }
+  },
+  performance: {
+    targetFrameRate: 30
+  }
+};
+
+/** デバッグ情報管理クラス */
+class DebugInfo {
+  constructor() {
+    this.fps = 0;
+    this.handCount = 0;
+    this.mode = 0;
+  }
+
+  update(hands, currentMode) {
+    this.fps = frameRate();
+    this.handCount = hands.length;
+    this.mode = currentMode;
+  }
+
+  draw() {
+    if (!CONFIG.display.debug) return;
+
+    fill(255);
+    noStroke();
+    textSize(14);
+    textAlign(LEFT);
+
+    let y = 20;
+    text(`FPS: ${this.fps.toFixed(1)}`, 10, y);
+    text(`検出された手: ${this.handCount}`, 10, y += 20);
+    text(`現在のモード: ${this.mode}`, 10, y += 20);
+  }
+}
+
+/** Ball クラスの定義 */
+class Ball {
+  constructor(x, y, vx, vy, r, handIndex) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.r = r;
+    this.handIndex = handIndex;
+    this.color = handIndex === 0 ? color(255, 255, 0, 180) : color(0, 255, 255, 180);
+  }
+
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += CONFIG.effects.ball.gravity;
+    this.vx *= CONFIG.effects.ball.friction;
+    this.vy *= CONFIG.effects.ball.friction;
+  }
+
+  draw() {
+    noStroke();
+    fill(this.color);
+    ellipse(this.x, this.y, this.r * 2);
+  }
+}
+
+/** MediaPipe Hands セットアップの修正 */
+function setupMediaPipe() {
+  videoElement = document.getElementById('input_video');
+  
+  const hands = new Hands({
+    locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+    }
+  });
+
+  hands.setOptions({
+    maxNumHands: 2,
+    modelComplexity: 1,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+  });
+
+  hands.onResults(gotHands);
+
+  // カメラの設定を修正
+  const camera = new Camera(videoElement, {
+    onFrame: async () => {
+      await hands.send({image: videoElement});
+    },
+    width: CANVAS_WIDTH,
+    height: CANVAS_HEIGHT,
+    facingMode: 'user'
+  });
+
+  camera.start().catch(err => {
+    console.error('カメラの起動に失敗:', err);
+  });
+}
+
+function gotHands(results) {
+  detections = results;
+}
+
 async function setup() {
-  createCanvas(640, 480);
+  createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+  frameRate(CONFIG.performance.targetFrameRate);
+  
+  canvas2 = createGraphics(CANVAS_WIDTH, CANVAS_HEIGHT);
+  canvas2.strokeWeight(5);
+  
+  setupMediaPipe();
+  debugInfo = new DebugInfo();
+  
+  resetScene();
+}
 
-  // デフォルトがRGBですが、HSBを使う場合は切り替えてください
-  // colorMode(HSB);
+function draw() {
+  background(0);
+  // image(video, 0, 0);
+  
+  // カメラ映像の描画
+  if (videoElement && videoElement.videoWidth > 0) {
+    push();
+    translate(width, 0);
+    scale(-1, 1);
+    drawingContext.drawImage(videoElement, 0, 0, width, height);
+    pop();
+  }
 
+  // ボールの更新と描画
+  if (fing === MODES.BALL) {
+    canvas2.clear();
+    balls.forEach(ball => {
+      ball.update();
+      ball.draw();
+    });
+  }
+  
+  // 手の検出結果の描画
+  if (detections && detections.multiHandLandmarks) {
+    detections.multiHandLandmarks.forEach((hand, index) => {
+      const handedness = detections.multiHandedness[index].label;
+      const handIndex = handedness === "Left" ? 0 : 1;
+      
+      switch (fing) {
+        case MODES.SKELETON:
+          drawSkeletonMP(hand, handIndex);
+          break;
+        case MODES.INDEX_TRAIL:
+          drawIndexTrailMP(hand, handIndex);
+          break;
+        case MODES.BALL:
+          updateBallsMP(hand, handIndex);
+          break;
+      }
+    });
+  }
+
+  // サブキャンバスの描画
+  image(canvas2, 0, 0);
+  
+  // デバッグ情報の更新と描画
+  debugInfo.update(detections?.multiHandLandmarks || [], fing);
+  debugInfo.draw();
+}
+
+/**
+ * モード切り替え時に描画内容や履歴をリセット
+ */
+function resetScene() {
+  // メモリリークを防ぐためのクリーンアップ
+  canvas2.remove();
   canvas2 = createGraphics(width, height);
   canvas2.strokeWeight(5);
 
-  // カメラ映像の取得
-  video = createCapture(VIDEO);
-  video.size(width, height);
-  video.hide();
-
-  // TensorFlow.jsの準備が完了するまで待機
-  await tf.ready();
-  console.log("TensorFlow.js is ready!");
-
-  // handposeモデルのロード
-  handposeModel = await handpose.load(options);
-  console.log("Handpose model loaded!");
-
-  frameRate(30); // フレームレート調整
-}
-
-//------------------------------
-// p5.jsのメイン描画ループ
-//------------------------------
-async function draw() {
+  // サブキャンバスをクリア
+  canvas2.clear();
+  // メインキャンバスもクリア
   background(0);
 
-  // カメラ映像を左右反転して描画
-  push();
-  translate(width, 0);
-  scale(-1, 1);
-  image(video, 0, 0, width, height);
-  pop();
-
-  // サブキャンバスを重ねる
-  image(canvas2, 0, 0);
-
-  // 一定フレームごとに手の検出
-  if (handposeModel && frameCount % 2 === 0) {
-    predictions = await handposeModel.estimateHands(video.elt);
-  }
-
-  // 手の検出結果をモードに応じて描画
-  drawHand(predictions, fing);
-
-  // ボール描画モード時のみ、ボールの動きを更新・描画
-  if (fing === 2) {
-    canvas2.clear(); // ボール用にサブキャンバスを一度クリア
-    drawBalls();
-  }
+  // 軌跡、ボール、指先座標を初期化
+  trail = [[], []];
+  balls = [];
+  ftip = [
+    Array.from({ length: 5 }, () => [0, 0]),  // 左手の指先座標
+    Array.from({ length: 5 }, () => [0, 0])   // 右手の指先座標
+  ];
 }
 
-//------------------------------
-// マウスクリックでモード切り替え
-//------------------------------
-function mousePressed() {
-  fing = (fing + 1) % 3;
-}
-
-function touchEnded() {
-  fing = (fing + 1) % 3;
-}
-
-//------------------------------
-// 手の描画をモード別に処理
-//------------------------------
+//--------------------------------------
+// 手の推定結果をモードに合わせて描画
+//--------------------------------------
 function drawHand(predictions, mode) {
-  predictions.forEach((prediction) => {
+  // 両手の予測結果それぞれに対して処理を実行
+  predictions.forEach((prediction, index) => {
+    const handColor = createHandColor(index);
+    stroke(handColor);
+    
     switch (mode) {
-      case 0:
-        // 元のコードと同じスケルトン描画
+      case MODES.SKELETON:
         drawSkeleton(prediction);
         break;
-      case 1:
-        // 人差し指の軌跡描画
-        drawIndexTrail(prediction);
+      case MODES.INDEX_TRAIL:
+        drawIndexTrail(prediction, index);  // インデックスを渡して両手の軌跡を区別
         break;
-      case 2:
-        // ボール用の指先更新
-        updateBalls(prediction);
+      case MODES.BALL:
+        updateBalls(prediction, index);  // インデックスを渡して両手のボールを区別
         break;
       default:
         break;
@@ -777,50 +264,71 @@ function drawHand(predictions, mode) {
 }
 
 //==================================================
-// (A) スケルトン描画 (fing = 0)
+// (A) スケルトン描画 (MODE_SKELETON)
 //==================================================
 function drawSkeleton(prediction) {
-  // 元のコードにあったロジックを再現
-  let pKeypoint = null;
+  const { landmarks } = prediction;
 
-  prediction.landmarks.forEach((keypoint, j) => {
-    const mirroredX = width - keypoint[0];
-    const mirroredY = keypoint[1];
+  // 関節角度の計算と表示
+  function calculateAngle(p1, p2, p3) {
+    const angle = Math.atan2(p3[1] - p2[1], p3[0] - p2[0]) -
+      Math.atan2(p1[1] - p2[1], p1[0] - p2[0]);
+    return Math.abs((angle * 180 / Math.PI + 360) % 360);
+  }
 
-    // スケルトンの線を引く処理
-    drawConnections(j, pKeypoint, mirroredX, mirroredY, prediction);
+  // 指の識別表示
+  const fingerNames = ['親指', '人差指', '中指', '薬指', '小指'];
+  const fingerBaseIndices = [2, 5, 9, 13, 17];
 
-    // 次回ループ用に、今回の座標を pKeypoint として保存
-    pKeypoint = [mirroredX, mirroredY];
+  fingerNames.forEach((name, i) => {
+    const baseIndex = fingerBaseIndices[i];
+    const x = width - landmarks[baseIndex][0];
+    const y = landmarks[baseIndex][1];
+
+    // 指の名前を表示
+    fill(255);
+    noStroke();
+    textSize(12);
+    text(name, x, y);
+
+    // 関節角度を計算して表示
+    if (baseIndex > 0 && baseIndex < landmarks.length - 1) {
+      const angle = calculateAngle(
+        landmarks[baseIndex - 1],
+        landmarks[baseIndex],
+        landmarks[baseIndex + 1]
+      );
+      text(`${Math.round(angle)}°`, x, y + 15);
+    }
+  });
+
+  // 既存のスケルトン描画
+  let prevKeypoint = null;
+  landmarks.forEach((keypoint, i) => {
+    const x = width - keypoint[0];
+    const y = keypoint[1];
+    drawConnections(i, prevKeypoint, x, y, prediction);
+    prevKeypoint = [x, y];
   });
 }
 
-// 元のコードから移植したスケルトン描画用の接続関数
-function drawConnections(j, pKeypoint, mirroredX, mirroredY, prediction) {
-  // スケルトンの色（RGBで鮮やかな黄色）
+function drawConnections(index, prevKey, x, y, prediction) {
   stroke(255, 255, 0);
   strokeWeight(2);
 
-  // 1) 前のキーポイントがある & 特定のインデックス以外なら線を結ぶ
-  if (pKeypoint && j > 0 && ![5, 9, 13, 17].includes(j)) {
-    line(pKeypoint[0], pKeypoint[1], mirroredX, mirroredY);
+  if (prevKey && index > 0 && ![5, 9, 13, 17].includes(index)) {
+    line(prevKey[0], prevKey[1], x, y);
   }
-
-  // 2) 特定の指のインデックスの場合、手首(landmarks[0])に線を結ぶ
-  if ([6, 10, 14, 18].includes(j) && pKeypoint) {
+  if ([6, 10, 14, 18].includes(index) && prevKey) {
     line(
-      pKeypoint[0],
-      pKeypoint[1],
+      prevKey[0],
+      prevKey[1],
       width - prediction.landmarks[0][0],
       prediction.landmarks[0][1]
     );
   }
-
-  // 3) [2, 3, 4, 5] などの場合に指をまとめて結ぶ処理
-  //    (親指の骨格を描いているような処理)
-  if ([2, 3, 4, 5].includes(j)) {
-    for (let m = j - 1; m < j + 12; m += 4) {
-      // m+4 が配列範囲を超えないようチェックする手もあり
+  if ([2, 3, 4, 5].includes(index)) {
+    for (let m = index - 1; m < index + 12; m += 4) {
       if (m + 4 < prediction.landmarks.length) {
         line(
           width - prediction.landmarks[m][0],
@@ -834,87 +342,219 @@ function drawConnections(j, pKeypoint, mirroredX, mirroredY, prediction) {
 }
 
 //==================================================
-// (B) 人差し指の軌跡描画 (fing = 1)
+// (B) 人差し指の軌跡描画 (MODE_INDEX_TRAIL)
 //==================================================
-function drawIndexTrail(prediction) {
+function drawIndexTrail(prediction, handIndex) {
   const { landmarks } = prediction;
-
-  // 人差し指先端(INDEX_FINGER_TIP)の座標のみ取得
   const x = width - landmarks[INDEX_FINGER_TIP][0];
   const y = landmarks[INDEX_FINGER_TIP][1];
 
-  // 軌跡を記録
-  trail.push([x, y]);
-  if (trail.length > TRAIL_LENGTH) {
-    trail.shift();
+  // 両手用の軌跡配列がない場合は初期化
+  if (!trail[handIndex]) {
+    trail[handIndex] = [];
   }
 
-  // サブキャンバスに軌跡を描画
+  trail[handIndex].push([x, y]);
+  if (trail[handIndex].length > TRAIL_LENGTH) {
+    trail[handIndex].shift();
+  }
+
+  // 手ごとに異なる色で描画
+  const trailColor = handIndex === 0 ? color(0, 255, 0) : color(255, 0, 255);
+  
   canvas2.noFill();
-  canvas2.stroke(0, 255, 0); // 緑色
+  canvas2.stroke(trailColor);
   canvas2.strokeWeight(2);
   canvas2.beginShape();
-  trail.forEach(([tx, ty]) => {
-    canvas2.curveVertex(tx, ty);
-  });
+  trail[handIndex].forEach(([tx, ty]) => canvas2.curveVertex(tx, ty));
   canvas2.endShape();
 
-  // 指先に円を描画（高さに応じて色変えたい場合はHSBに戻す）
-  canvas2.fill(0, 255, 0);
+  canvas2.fill(trailColor);
   canvas2.noStroke();
-  canvas2.ellipse(x, y, 10, 10);
+  canvas2.ellipse(x, y, 10);
 }
 
 //==================================================
-// (C) ボール用の座標更新 (fing = 2)
+// (C) ボール更新 & 描画 (MODE_BALL)
 //==================================================
-function updateBalls(prediction) {
+function updateBalls(prediction, handIndex) {
   const { landmarks } = prediction;
-  // 指先 (サム,インデックス,中指,薬指,小指) のみ抽出
   const fingertips = [THUMB_TIP, INDEX_FINGER_TIP, MIDDLE_FINGER_TIP, RING_FINGER_TIP, PINKY_TIP];
+  
+  // 両手用の指先座標配列がない場合は初期化
+  if (!ftip[handIndex]) {
+    ftip[handIndex] = Array.from({ length: 5 }, () => [0, 0]);
+  }
 
-  fingertips.forEach((tipIndex, count) => {
-    const keypoint = landmarks[tipIndex];
-    let mirroredX = width - keypoint[0];
-    let mirroredY = keypoint[1];
+  fingertips.forEach((tipIndex, i) => {
+    const [px, py] = ftip[handIndex][i];
+    const x = width - landmarks[tipIndex][0];
+    const y = landmarks[tipIndex][1];
+    const dx = x - px;
+    const dy = y - py;
 
-    // ボール生成
-    balls.push({
-      x: mirroredX,
-      y: mirroredY,
-      xSpeed: 0,
-      ySpeed: 0,
-      prevx: ftip[count][0],
-      prevy: ftip[count][1],
-    });
-
-    // 今回の指先座標を記録
-    [ftip[count][0], ftip[count][1]] = [mirroredX, mirroredY];
+    // 速度に応じたボールの特性変更
+    const speed = sqrt(dx * dx + dy * dy);
+    if (speed > 3) {
+      const radius = map(speed, 0, 50, 8, 20);
+      // 手ごとに異なる色のボールを生成
+      const newBall = new Ball(
+        x, y,
+        dx * 0.2,
+        dy * 0.2,
+        radius,
+        handIndex  // ボールに手のインデックスを追加
+      );
+      balls.push(newBall);
+    }
+    ftip[handIndex][i] = [x, y];
   });
 }
 
-//--------------------------------------------------
-// (C-2) ボールを描画 (fing = 2)
-//--------------------------------------------------
-function drawBalls() {
-  balls.forEach((ball) => {
+function handleWindowResize() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+window.addEventListener('resize', handleWindowResize);
+
+function transitionToMode(newMode) {
+  // モード切り替え時のアニメーション効果
+  fadeOut(() => {
+    fing = newMode;
+    resetScene();
+    fadeIn();
+  });
+}
+
+function createHandColor(index) {
+  if (typeof color === 'function') {
+    return index === 0 ? color(255, 255, 0) : color(0, 255, 255);
+  }
+  return index === 0 ? { r: 255, g: 255, b: 0 } : { r: 0, g: 255, b: 255 };
+}
+
+/** MediaPipe用の手のスケルトン描画関数 */
+function drawSkeletonMP(landmarks, handIndex) {
+  const color = handIndex === 0 ? CONFIG.display.colors.leftHand : CONFIG.display.colors.rightHand;
+  
+  // 指の識別表示
+  const fingerNames = ['親指', '人差指', '中指', '薬指', '小指'];
+  const fingerBaseIndices = [2, 5, 9, 13, 17];
+
+  // 指の名前と関節角度を表示
+  fingerNames.forEach((name, i) => {
+    const baseIndex = fingerBaseIndices[i];
+    const x = width - landmarks[baseIndex].x * width;
+    const y = landmarks[baseIndex].y * height;
+
+    fill(255);
     noStroke();
-    fill(180, 180, 255, 180); // お好みの色 (RGB)
-    ellipse(ball.x, ball.y, 10, 10);
+    textSize(12);
+    text(name, x, y);
 
-    // 慣性をつける
-    ball.xSpeed = lerp(ball.xSpeed || 0, ball.x - ball.prevx, 0.2);
-    ball.ySpeed = lerp(ball.ySpeed || 0, ball.y - ball.prevy, 0.2);
-
-    // 減衰
-    ball.ySpeed *= 0.9;
-
-    // ボールの位置を更新
-    ball.x += ball.xSpeed * 0.05;
-    ball.y += ball.ySpeed * 0.05;
+    // 関節角度の計算と表示
+    if (baseIndex > 1) {
+      const p1 = landmarks[baseIndex - 2];
+      const p2 = landmarks[baseIndex - 1];
+      const p3 = landmarks[baseIndex];
+      const angle = calculateAngle(p1, p2, p3);
+      text(`${Math.round(angle)}°`, x, y + 15);
+    }
   });
 
-  // メモリ節約のため配列を一定以上溜まらないようにする
-  balls = balls.slice(-100);
+  // スケルトンの描画
+  stroke(color);
+  strokeWeight(2);
+
+  // 手のひらの接続
+  const palmIndices = [0, 1, 5, 9, 13, 17, 0];
+  for (let i = 0; i < palmIndices.length - 1; i++) {
+    const start = landmarks[palmIndices[i]];
+    const end = landmarks[palmIndices[i + 1]];
+    line(
+      width - start.x * width, start.y * height,
+      width - end.x * width, end.y * height
+    );
+  }
+
+  // 指の接続
+  const fingers = [
+    [1, 2, 3, 4],         // 親指
+    [5, 6, 7, 8],         // 人差し指
+    [9, 10, 11, 12],      // 中指
+    [13, 14, 15, 16],     // 薬指
+    [17, 18, 19, 20]      // 小指
+  ];
+
+  fingers.forEach(finger => {
+    for (let i = 0; i < finger.length - 1; i++) {
+      const start = landmarks[finger[i]];
+      const end = landmarks[finger[i + 1]];
+      line(
+        width - start.x * width, start.y * height,
+        width - end.x * width, end.y * height
+      );
+    }
+  });
 }
 
+/** 関節角度の計算 */
+function calculateAngle(p1, p2, p3) {
+  const angle = Math.atan2(p3.y - p2.y, p3.x - p2.x) -
+    Math.atan2(p1.y - p2.y, p1.x - p2.x);
+  return Math.abs((angle * 180 / Math.PI + 360) % 360);
+}
+
+/** MediaPipe用の人差し指の軌跡描画関数 */
+function drawIndexTrailMP(landmarks, handIndex) {
+  const x = width - landmarks[8].x * width;  // 人差し指の先端
+  const y = landmarks[8].y * height;
+
+  trail[handIndex].push([x, y]);
+  if (trail[handIndex].length > TRAIL_LENGTH) {
+    trail[handIndex].shift();
+  }
+
+  const trailColor = handIndex === 0 ? color(255, 255, 0) : color(0, 255, 255);
+  
+  canvas2.noFill();
+  canvas2.stroke(trailColor);
+  canvas2.strokeWeight(2);
+  canvas2.beginShape();
+  trail[handIndex].forEach(([tx, ty]) => canvas2.curveVertex(tx, ty));
+  canvas2.endShape();
+
+  canvas2.fill(trailColor);
+  canvas2.noStroke();
+  canvas2.ellipse(x, y, 10);
+}
+
+/** MediaPipe用のボール更新関数 */
+function updateBallsMP(landmarks, handIndex) {
+  const fingertips = [4, 8, 12, 16, 20];  // 指先のインデックス
+  
+  fingertips.forEach((tipIndex, i) => {
+    const [px, py] = ftip[handIndex][i];
+    const x = width - landmarks[tipIndex].x * width;
+    const y = landmarks[tipIndex].y * height;
+    const dx = x - px;
+    const dy = y - py;
+
+    const speed = sqrt(dx * dx + dy * dy);
+    if (speed > 3) {
+      const radius = map(speed, 0, 50, 8, 20);
+      balls.push(new Ball(x, y, dx * 0.2, dy * 0.2, radius, handIndex));
+    }
+    ftip[handIndex][i] = [x, y];
+  });
+}
+
+/** モード切り替え用関数 */
+function mousePressed() {
+  fing = (fing + 1) % 3;
+  resetScene();
+}
+
+function touchEnded() {
+  fing = (fing + 1) % 3;
+}
