@@ -550,11 +550,22 @@ function updateBallsMP(landmarks, handIndex) {
 }
 
 /** モード切り替え用関数 */
-function mousePressed() {
+function mouseClicked() {
+  if (fing === 2) {
+    window.location.href = './hands-window';
+    return;
+  }
   fing = (fing + 1) % 3;
   resetScene();
 }
 
-function touchEnded() {
-  fing = (fing + 1) % 3;
-}
+// function touchEnded() {
+//   console.log('touchEnded');
+  
+//   if (fing === 2) {
+//     window.location.href = './hands-window';
+//     return;
+//   }
+//   fing = (fing + 1) % 3;
+//   resetScene();
+// }

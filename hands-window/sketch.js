@@ -36,7 +36,9 @@ window.setup = async () => {
 
 window.draw = () => {
   background(220);
-  
+
+  scale(-1, 1);
+
   push();
   noStroke();
   texture(video);
@@ -154,7 +156,7 @@ window.draw = () => {
   }
   
   if (result.landmarks.length != 0) {
-    print(result);
+    // print(result);
   }
 };
 
@@ -163,3 +165,11 @@ window.keyPressed = () => {
     drawKeyPoints = !drawKeyPoints;
   }
 };
+
+window.mouseClicked = () => {
+  window.location.href = './..';
+};
+
+// window.touchEnded = () => {
+//   window.location.href = './..';
+// };
