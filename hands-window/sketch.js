@@ -170,6 +170,6 @@ window.mouseClicked = () => {
   window.location.href = './..';
 };
 
-// window.touchEnded = () => {
-//   window.location.href = './..';
-// };
+window.touchEnded = () => {
+  window.location.href = './..';
+};

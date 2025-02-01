@@ -559,13 +559,11 @@ function mouseClicked() {
   resetScene();
 }
 
-// function touchEnded() {
-//   console.log('touchEnded');
-  
-//   if (fing === 2) {
-//     window.location.href = './hands-window';
-//     return;
-//   }
-//   fing = (fing + 1) % 3;
-//   resetScene();
-// }
+function touchEnded() {
+  if (fing === 2) {
+    window.location.href = './hands-window';
+    return;
+  }
+  fing = (fing + 1) % 3;
+  resetScene();
+}
