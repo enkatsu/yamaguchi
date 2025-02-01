@@ -572,10 +572,10 @@ function updateBallsMP(landmarks, handIndex) {
 // }
 
 function touchEnded() {
-  if (fing === 2) {
-    window.location.href = './hands-window';
-    return;
-  }
+  // if (fing === 2) {
+  //   window.location.href = './hands-window';
+  //   return;
+  // }
   fing = (fing + 1) % 3;
   resetScene();
 }
